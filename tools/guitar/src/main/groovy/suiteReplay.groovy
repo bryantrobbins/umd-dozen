@@ -2,6 +2,7 @@
 
 import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
+import groovyx.net.http.RESTClient
 
 def master = "guitar05.cs.umd.edu"
 
@@ -12,7 +13,7 @@ def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
 def manager = new TestDataManager(master, "37017", args[1])
 
 // REST client to talk to Jenkins for build count
-def client = new RESTClient('http://guitar05.cs.umd.edu:8888' )
+def client = new RESTClient("http://${master}:8888")
  
 def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
@@ -40,9 +41,6 @@ for(String id : manager.getTestIdsInSuite(args[2])){
 					sleep(1000)
 				}
 }
-
-
-getAwaitingBuildCount(client)
 
 int getAwaitingBuildCount(RESTClient client){
   def resp = client.get( path : '/queue/api/json' )
