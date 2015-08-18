@@ -36,7 +36,10 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         // Use Jenkins client to launch job
         jenkinsClient.submitJob("replay-test", jobParams)
 
-				// ZZZ if necessary to let the master recover
+				// Always sleep a tiny bit
+				sleep(500)
+	
+				// sleep more if necessary to let the master catch up
 				while(getAwaitingBuildCount(client) > BUILD_COUNT_THRESHOLD) {
 					sleep(1000)
 				}
