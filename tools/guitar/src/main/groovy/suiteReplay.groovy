@@ -19,7 +19,7 @@ def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
 
 int count = 0
-static final int BUILD_COUNT_THRESHOLD = 5
+int BUILD_COUNT_THRESHOLD = 5
 
 for(String id : manager.getTestIdsInSuite(args[2])){
 				count++
