@@ -10,12 +10,16 @@ def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
 
 // TestDataManager
 def manager = new TestDataManager(master, "37017", args[1])
+
+// REST client to talk to Jenkins for build count
+def client = new RESTClient('http://guitar05.cs.umd.edu:8888' )
  
 def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
 
 int count = 0
-int start_buffer_count = 50
+static final int BUILD_COUNT_THRESHOLD = 5
+
 for(String id : manager.getTestIdsInSuite(args[2])){
 				count++
 
@@ -31,10 +35,16 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         // Use Jenkins client to launch job
         jenkinsClient.submitJob("replay-test", jobParams)
 
-				// ZZZ to let the master recover
-				if(count < start_buffer_count) {
-					sleep(3000)
-				} else {
-					sleep(10000)
+				// ZZZ if necessary to let the master recover
+				while(getAwaitingBuildCount(client) > BUILD_COUNT_THRESHOLD) {
+					sleep(1000)
 				}
+}
+
+
+getAwaitingBuildCount(client)
+
+int getAwaitingBuildCount(RESTClient client){
+  def resp = client.get( path : '/queue/api/json' )
+  return resp.data['items'].size()
 }
