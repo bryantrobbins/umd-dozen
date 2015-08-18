@@ -1,0 +1,165 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'groovy'
+
+// Dependency path arg
+def master = hasProperty('master') ? master : 'guitar05.cs.umd.edu'
+def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
+
+// Ripper args
+def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
+def cobertura_file_val = hasProperty('cobertura_file') ? cobertura_file : ''
+def aut_bin_val = hasProperty('aut_bin') ? aut_bin : ''
+def aut_inst_val = hasProperty('aut_inst') ? aut_inst : ''
+def aut_mainclass_val = hasProperty('aut_mainclass') ? aut_mainclass : ''
+def aut_initial_waiting_time_val = hasProperty('aut_initial_waiting_time') ? aut_initial_waiting_time : ''
+def aut_configuration_file_val = hasProperty('aut_configuration_file') ? aut_configuration_file : ''
+def delay_val = hasProperty('delay') ? delay : ''
+def aut_arguments_val = hasProperty('aut_arguments') ? aut_arguments : ''
+def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
+def aut_classpath_val = hasProperty('aut_classpath') ? aut_classpath : ''
+
+// Additional converter args
+def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
+
+// Additional generator args
+def length_val = hasProperty('length') ? length : '2'
+def testcases_dir_val = hasProperty('testcases_dir') ? testcases_dir : ''
+
+// Additional save args
+def db_id_val = hasProperty('db_id') ? db_id : ''
+def suite_id_val = hasProperty('suite_id') ? suite_id : ''
+def aut_coverage_file_val = hasProperty('aut_coverage_file') ? aut_coverage_file : ''
+def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
+def testcase_dir_val = hasProperty('testcase_dir') ? testcase_dir : ''
+
+// Additional replayer args
+def log_file_val = hasProperty('log_file') ? log_file : ''
+def oracle_file_val = hasProperty('oracle_file') ? oracle_file : ''
+def aut_replay_timeout_val = hasProperty('aut_replay_timeout') ? aut_replay_timeout : ''
+def aut_replay_step_timeout_val = hasProperty('aut_replay_step_timeout') ? aut_replay_step_timeout : ''
+def test_id_val = hasProperty('test_id') ? test_id : ''
+def exec_id_val = hasProperty('exec_id') ? exec_id : ''
+def bundle_id_val = hasProperty('bundle_id') ? bundle_id : ''
+def aut_name_val = hasProperty('aut_name') ? aut_name : ''
+def clean_coverage_file_val = hasProperty('clean_coverage_file') ? clean_coverage_file : ''
+def coverage_dir_val = hasProperty('coverage_dir') ? coverage_dir : ''
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+configurations {
+	ripper
+	converter
+	generate_sl
+	save
+  replayer
+  jenkins
+}
+
+FileCollection collection = files(aut_classpath_val.split(":"))
+
+repositories {
+    mavenCentral()
+    maven {
+          url "http://" + loc + "/nexus/content/groups/public"
+    }
+}
+
+dependencies {
+    ripper group: 'edu.umd.cs.guitar', name: 'gui-ripper-jfc', version: '0.0.1-SNAPSHOT'
+    ripper group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
+    ripper files(collection)
+    converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
+    generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
+    save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
+    replayer group: 'edu.umd.cs.guitar', name: 'gui-replayer-jfc', version: '0.0.1-SNAPSHOT'
+    replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
+	replayer files(collection)
+	compile 'org.codehaus.groovy:groovy-all:2.3.8'
+	compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
+}
+
+task hello << {
+	println "Hello World"
+}
+
+task rip(type: JavaExec) {
+	classpath configurations.ripper
+	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	systemProperty "user.home", tmp_home_val
+	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
+	systemProperty "log4j.configuration", "log/guitar-clean.glc"
+	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", delay_val, "-a", aut_arguments_val
+}
+
+task replay(type: JavaExec) {
+	classpath configurations.replayer
+	main = 'edu.umd.cs.guitar.replayer.JFCReplayerMain'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	systemProperty "user.home", tmp_home_val
+	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
+	systemProperty "log4j.configuration", "log/guitar-clean.glc"
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tde", exec_id_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", master, "-tdp", "37017", "-a", aut_arguments_val, "-cc", clean_coverage_file_val, "-cd", coverage_dir_val
+}
+
+task convert(type: JavaExec) {
+	classpath configurations.converter
+	main = 'edu.umd.cs.guitar.graph.GUIStructure2GraphConverter'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-p", "EFGConverter", "-g", aut_gui_file_val, "-e", aut_efg_file_val
+}
+
+task generate_sl(type: JavaExec) {
+	classpath configurations.generate_sl
+	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-p", "SequenceLengthCoverage", "-m", "0", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
+}
+
+task saveSuiteFiles(type: JavaExec) {
+	classpath configurations.save
+	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveSuiteInput'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-h", master, "-p", "37017", "-d", db_id_val, "-s", suite_id_val, "-e", aut_efg_file_val, "-g", aut_gui_file_val, "-r", aut_coverage_file_val
+}
+
+task saveTestCaseFiles(type: JavaExec) {
+	classpath configurations.save
+	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveTestCaseInput'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-h", master, "-p", "37017", "-d", db_id_val, "-s", suite_id_val, "-t", testcase_dir_val
+}
+
+task logExecution(dependsOn: 'classes', type: JavaExec) {
+    main = 'logExecution'
+    classpath = sourceSets.main.runtimeClasspath
+		args master, '37017', db_id_val, bundle_id_val, test_id_val, exec_id_val, suite_id_val
+}
+
+task coverageReport (dependsOn: 'classes', type: JavaExec) {
+    main = 'coverageReport'
+    classpath = sourceSets.main.runtimeClasspath
+		args db_id_val, test_id_val
+}
+
+task replaySuite (dependsOn: 'classes', type: JavaExec) {
+    main = 'suiteReplay'
+    classpath = sourceSets.main.runtimeClasspath
+    args aut_name_val, db_id_val, suite_id_val, bundle_id_val
+}
+
+task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
+    main = 'saveTCOutputs'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, exec_id_val, coverage_dir_val
+}
