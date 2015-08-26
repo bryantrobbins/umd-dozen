@@ -159,9 +159,10 @@ task replaySuite (dependsOn: 'classes', type: JavaExec) {
     args aut_name_val, db_id_val, suite_id_val, bundle_id_val
 }
 
-task debug (dependsOn: 'classes', type: JavaExec) {
-    main = 'getQueueSize'
+task tripleReplay (dependsOn: 'classes', type: JavaExec) {
+    main = 'tripleReplay'
     classpath = sourceSets.main.runtimeClasspath
+    args aut_name_val, db_id_val, suite_id_val, bundle_id_val
 }
 
 task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
