@@ -10,4 +10,8 @@ def bundles = Arrays.asList(args[4].split(","))
 println args
 
 // Post results
-ExperimentManager.postResults(host, port, dbId, suiteId, bundles)
+String resultId = ExperimentManager.postResults(host, port, dbId, suiteId, bundles)
+println resultId
+
+// Save id to file
+new File("resultId.txt").write "${resultId}"
