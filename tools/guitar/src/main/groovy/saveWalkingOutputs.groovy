@@ -28,11 +28,11 @@ def opts = [(LogProcessor.FILE_PATH_OPTION): findLogFile() ]
 manager.saveArtifact(cat, lp, opts, testId)
 
 // Save Map
-def opts = [(MapProcessor.FILE_PATH_OPTION): "WalkingRipper.MAP"]
+opts = [(MapProcessor.FILE_PATH_OPTION): "WalkingRipper.MAP"]
 manager.saveArtifact(cat, mp, opts, testId)
 
 // Save GUI
-def opts = [(GUIProcessor.FILE_PATH_OPTION): "WalkingRipper.GUI"]
+opts = [(GUIProcessor.FILE_PATH_OPTION): "WalkingRipper.GUI"]
 manager.saveArtifact(cat, gp, opts, testId)
 
 String findLogFile(){
