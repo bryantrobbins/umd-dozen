@@ -12,7 +12,7 @@ println args
 host=args[0]
 port=args[1]
 dbId=args[2]
-execId=args[3]
+testId=args[3]
 
 // Create a TestDataManager
 def manager = new TestDataManager(host, port, dbId)
@@ -25,15 +25,15 @@ GUIProcessor gp = new GUIProcessor()
 
 // Save Log
 def opts = [(LogProcessor.FILE_PATH_OPTION): findLogFile() ]
-manager.saveArtifact(cat, lp, opts, execId)
+manager.saveArtifact(cat, lp, opts, testId)
 
 // Save Map
 def opts = [(MapProcessor.FILE_PATH_OPTION): "WalkingRipper.MAP"]
-manager.saveArtifact(cat, mp, opts, execId)
+manager.saveArtifact(cat, mp, opts, testId)
 
 // Save GUI
 def opts = [(GUIProcessor.FILE_PATH_OPTION): "WalkingRipper.GUI"]
-manager.saveArtifact(cat, gp, opts, execId)
+manager.saveArtifact(cat, gp, opts, testId)
 
 String findLogFile(){
   def found = []
