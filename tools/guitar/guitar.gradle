@@ -45,6 +45,7 @@ def bundle_id_val = hasProperty('bundle_id') ? bundle_id : ''
 def aut_name_val = hasProperty('aut_name') ? aut_name : ''
 def clean_coverage_file_val = hasProperty('clean_coverage_file') ? clean_coverage_file : ''
 def coverage_dir_val = hasProperty('coverage_dir') ? coverage_dir : ''
+def max_count_val = hasProperty('max_count') ? max_count : ''
 
 configurations.all {
     // check for updates every build
@@ -75,6 +76,7 @@ dependencies {
     ripper files(collection)
     converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
     generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
+    generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-random-sequence-length', version: '0.0.1-SNAPSHOT'
     save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'gui-replayer-jfc', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
@@ -135,6 +137,14 @@ task generate_sl(type: JavaExec) {
 	minHeapSize "64m"
 	maxHeapSize "768m"
 	args "-p", "SequenceLengthCoverage", "-m", "0", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
+}
+
+task generate_random(type: JavaExec) {
+	classpath configurations.generate_sl
+	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-p", "RandomSequenceLengthCoverage", "-T", "-m", max_count_val, "-e", aut_efg_file_val, "-d", testcases_dir_val
 }
 
 task saveSuiteFiles(type: JavaExec) {
