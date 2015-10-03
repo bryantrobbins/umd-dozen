@@ -144,7 +144,7 @@ task generate_random(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-p", "RandomSequenceLengthCoverage", "-T", "-m", max_count_val, "-e", aut_efg_file_val, "-d", testcases_dir_val
+	args "-p", "RandomSequenceLengthCoverage", "-T", "-l", length_val, "-m", max_count_val, "-e", aut_efg_file_val, "-d", testcases_dir_val
 }
 
 task saveSuiteFiles(type: JavaExec) {

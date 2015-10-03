@@ -19,12 +19,13 @@ echo "*** Generating testcases $aut_name ***"
 #--------------
 if [ $# -lt 2 ]
 then
-   echo "Usage $0 <AUT NAME> <max number>"    
+   echo "Usage $0 <AUT NAME> <tc length> <max number>"
    exit
 fi
 
 cmd_tc_gen="gradle -b $guitar_dir/guitar.gradle"
 max=$2
+length=$3
 #--------------
 # Create testsuites root dir to contain all test suites  
 #--------------
@@ -50,7 +51,7 @@ exec_cmd "mkdir $testcases_dir"
 #--------------
 # Generate test cases 
 #--------------
-exec_cmd "$cmd_tc_gen -Paut_efg_file=$aut_efg_file -Pmax_count=$max -Ptestcases_dir=$testcases_dir generate_random"
+exec_cmd "$cmd_tc_gen -Paut_efg_file=$aut_efg_file -Plength=$length -Pmax_count=$max -Ptestcases_dir=$testcases_dir generate_random"
 exec_cmd "rm -f *.log"
 
 #--------------
