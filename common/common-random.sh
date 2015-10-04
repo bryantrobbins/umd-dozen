@@ -24,8 +24,8 @@ then
 fi
 
 cmd_tc_gen="gradle -b $guitar_dir/guitar.gradle"
-max=$2
-length=$3
+length=$2
+max=$3
 #--------------
 # Create testsuites root dir to contain all test suites  
 #--------------
