@@ -52,3 +52,11 @@ task addFeatures (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     args master, '37017', db_id_val, input_suite_val, predicted_suite_val, 4
 }
+
+task summarizeResults (dependsOn: 'classes', type: JavaExec) {
+		minHeapSize "1g"
+		maxHeapSize "4g"
+    main = 'summary'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, input_suite_val
+}

@@ -37,7 +37,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jenkinsClient.submitJob("replay-test", jobParams)
 
 				// Always sleep a tiny bit
-				sleep(500)
+				sleep(5000)
 	
 				// sleep more if necessary to let the master catch up
 				while(getAwaitingBuildCount(client) > BUILD_COUNT_THRESHOLD) {
