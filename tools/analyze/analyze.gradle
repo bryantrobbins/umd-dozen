@@ -13,6 +13,8 @@ def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def bundles_val = hasProperty('bundles') ? bundles : ''
 def suites_val = hasProperty('suites') ? suites : ''
 def input_suite_val = hasProperty('input_suite') ? input_suite : ''
+def test_id_val = hasProperty('test_id') ? test_id : ''
+def result_id_val = hasProperty('result_id') ? result_id : ''
 def predicted_suite_val = hasProperty('predicted_suite') ? predicted_suite : ''
 def size_val = hasProperty('size') ? size: '1000'
 
@@ -59,4 +61,12 @@ task summarizeResults (dependsOn: 'classes', type: JavaExec) {
     main = 'summary'
     classpath = sourceSets.main.runtimeClasspath
     args master, '37017', db_id_val, input_suite_val
+}
+
+task testDetails (dependsOn: 'classes', type: JavaExec) {
+		minHeapSize "1g"
+		maxHeapSize "4g"
+    main = 'details'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, result_id_val, test_id_val
 }
