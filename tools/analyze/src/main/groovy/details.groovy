@@ -1,70 +1,80 @@
-// HOST, PORT, DB_ID, SUITE_ID, BUNDLE_LIST
+// HOST, PORT, DB_ID, RESULT_ID, TEST_ID
 
 import com.mongodb.MongoClient
 import com.mongodb.DB
 import com.mongodb.BasicDBObject
+import edu.umd.cs.guitar.main.TestDataManager
+import edu.umd.cs.guitar.artifacts.ArtifactCategory
+import edu.umd.cs.guitar.processors.guitar.*
+import edu.umd.cs.guitar.processors.applog.TextObject
+import edu.umd.cs.guitar.model.data.*
 
 String host = args[0]
+String portString = args[1]
 int port = Integer.parseInt(args[1])
 String dbId = args[2]
-String suiteId = args[3]
+String resultId = args[3]
+String testId = args[4]
 println args
 
-// Basic connection
+TestDataManager testDataManager = new TestDataManager(host, portString, dbId)
+GUIProcessor guiProcessor = new GUIProcessor(testDataManager.getDb())
+EFGProcessor efgProcessor = new EFGProcessor(testDataManager.getDb())
+MapProcessor mapProcessor = new MapProcessor(testDataManager.getDb())
+TestcaseProcessor testcaseProcessor = new TestcaseProcessor()
+LogProcessor logProcessor = new LogProcessor()
+println "Connected to TDM instance"
+
 MongoClient mongoClient = new MongoClient(host, port)
 DB db = mongoClient.getDB(dbId);
-println "Connected to DB ${db.getName()}"
+println "Connected directly to DB ${db.getName()}"
 
-// Sanity check suite collection
-def testCount = db.getCollection("suite_${suiteId}").count()
-println "${testCount} test cases in suite ${suiteId}"
+// Get results Map and sanity check for resultId
+BasicDBObject resultQuery = new BasicDBObject("resultId", resultId)
+BasicDBObject resultsObject = db.getCollection("results").findOne(resultQuery)
+assert resultId == resultsObject.resultId
 
-// Sanity check bundles
-List bundleIds = db.getCollection("results").findOne().get("bundleId")
-println "Results from bundles ${bundleIds}"
-checkBundles(db, bundleIds)
+// Make sure that given testId was consistently passing
+assert resultsObject.results.passingResults.contains(testId)
 
-// Get result counts by category
-int passCount = getResultCountInClass(db, "passingResults")
-int failCount = getResultCountInClass(db, "failingResults")
-int badCount = getResultCountInClass(db, "inconsistentResults")
-println "Test results summary: ${passCount} pass, ${failCount} fail, ${badCount} inconsistent"
+// Get associated suiteId
+String suiteId = resultsObject.suiteId
 
-println "First 5 inconsistent results"
-getFirstFiveInClass(db, "inconsistentResults")
+// Get one execution id
+// Since the test passed consistently, we could take it from any bundle
+String bundleId = resultsObject.bundleId.get(0)
+assert null != bundleId
+BasicDBObject execQuery = new BasicDBObject("testId", testId)
+String execId = db.getCollection("bundle_${bundleId}").findOne(execQuery).executionId
+assert null != execId
+println "Using execution id ${execId} from bundle ${bundleId}"
 
-def checkBundles(DB db, def bundleIds) {
-	def verifySets = []
-	bundleIds.each {
-		verifySets << getSets(db, it)
-	}
+// Get GUI Structure
+GUIStructure gui = (GUIStructure) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, guiProcessor)
+assert null != gui
+println "Got GUIStructure"
 
-	assert([] == (verifySets[0]['test'] - verifySets[1]['test']))
-	assert([] == (verifySets[0]['test'] - verifySets[2]['test']))
-	assert([] == (verifySets[2]['test'] - verifySets[1]['test']))
+// Get EFG
+EFG efg = (EFG) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, efgProcessor)
+assert null != efg
+println "Got EFG"
+
+// Get test case
+TestCase tc = (TestCase) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT, testId, testcaseProcessor)
+assert null != tc
+println "Got TestCase"
+
+// Get log file
+TextObject log = (TextObject) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT, execId, logProcessor)
+assert null != log
+println "Got TextObject"
+
+// Debugging the log file mysteries
+BasicDBObject artifactQuery = new BasicDBObject("ownerId", execId)
+db.getCollection("artifacts").find(artifactQuery).each {
+	println it
 }
+//BasicDBObject artifactObject = db.getCollection("artifacts").find(artifactQuery)
 
-def getSets(DB db, String bundleId) {
-	def ret = [:]
-	ret['test'] = []
-	ret['exec'] = []
-	def execs = db.getCollection("bundle_${bundleId}").find()
-	execs.each {
-		ret['test'].add(it.testId)
-		ret['exec'].add(it.executionId)
-	}
 
-	ret
-}
-
-int getResultCountInClass(DB db, String cl) {
-	db.getCollection("results").findOne().get("results").get(cl).size()
-}
-
-def getFirstFiveInClass(DB db, String cl) {
-	def arr = db.getCollection("results").findOne().get("results").get(cl)
-	1.upto(5) {
-		println arr[it]	
-	}
-}
 

@@ -14,7 +14,6 @@ def bundles_val = hasProperty('bundles') ? bundles : ''
 def suites_val = hasProperty('suites') ? suites : ''
 def input_suite_val = hasProperty('input_suite') ? input_suite : ''
 def test_id_val = hasProperty('test_id') ? test_id : ''
-def result_id_val = hasProperty('result_id') ? result_id : ''
 def predicted_suite_val = hasProperty('predicted_suite') ? predicted_suite : ''
 def size_val = hasProperty('size') ? size: '1000'
 
