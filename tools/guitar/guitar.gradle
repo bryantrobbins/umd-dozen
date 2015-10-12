@@ -95,6 +95,7 @@ task rip(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
 	minHeapSize "64m"
 	maxHeapSize "768m"
+	jvmArgs "-noverify"
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
@@ -106,6 +107,7 @@ task walk(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
 	minHeapSize "64m"
 	maxHeapSize "768m"
+	jvmArgs "-noverify"
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
