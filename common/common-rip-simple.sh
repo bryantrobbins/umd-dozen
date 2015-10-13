@@ -60,7 +60,15 @@ source "$aut_scripts_dir/aut.utils.sh"
 # Ripping setup
 #--------------------------
 echo "The aut classpath is $aut_classpath"
-classpath=$cobertura_classpath:$aut_inst_classpath:$aut_classpath
+
+if [ -z $aut_inst_classpath ]
+  then
+		classpath=$aut_classpath
+	else
+		classpath=$cobertura_classpath:$aut_inst_classpath:$aut_classpath
+fi
+
+#classpath=$cobertura_classpath:$aut_inst_classpath:$aut_classpath
 cobertura_ripping_file="$ripper_coverage_dir/cobertura_ripper.ser"
 
 # Prepare output directory 
