@@ -43,7 +43,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
 					sleep(1000)
 				} else {
 					int mult = 50 - (count % 50)
-					sleep(mult*100)
+					sleep(mult*200)
 				}
 	
 				// sleep more if necessary to let the master catch up
