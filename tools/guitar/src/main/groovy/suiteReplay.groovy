@@ -19,6 +19,7 @@ def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
 
 int count = 0
+boolean useShorterMin = false
 int BUILD_COUNT_THRESHOLD = 5
 
 for(String id : manager.getTestIdsInSuite(args[2])){
@@ -37,10 +38,17 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jenkinsClient.submitJob("replay-test", jobParams)
 
 				// Always sleep a tiny bit
-				sleep(10000)
+				// We don't want to do this once we are in the holding pattern
+				if(useShorterMin) {
+					sleep(1000)
+				} else {
+					int mult = 50 - (count % 50)
+					sleep(mult*100)
+				}
 	
 				// sleep more if necessary to let the master catch up
 				while(getAwaitingBuildCount(client) > BUILD_COUNT_THRESHOLD) {
+					useShorterMin = true
 					sleep(1000)
 				}
 }
