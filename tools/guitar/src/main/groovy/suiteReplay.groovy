@@ -42,8 +42,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
 				if(useShorterMin) {
 					sleep(1000)
 				} else {
-					int mult = 10 - (count % 10)
-					sleep(mult*1000)
+					sleep(mult*5000)
 				}
 	
 				// sleep more if necessary to let the master catch up
