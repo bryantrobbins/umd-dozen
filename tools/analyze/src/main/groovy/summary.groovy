@@ -22,7 +22,7 @@ println "${testCount} test cases in suite ${suiteId}"
 // Sanity check bundles
 List bundleIds = db.getCollection("results").findOne().get("bundleId")
 println "Results from bundles ${bundleIds}"
-checkBundles(db, bundleIds)
+//checkBundles(db, bundleIds)
 
 // Get result counts by category
 int passCount = getResultCountInClass(db, "passingResults")
@@ -40,8 +40,8 @@ def checkBundles(DB db, def bundleIds) {
 	}
 
 	assert([] == (verifySets[0]['test'] - verifySets[1]['test']))
-	assert([] == (verifySets[0]['test'] - verifySets[2]['test']))
-	assert([] == (verifySets[2]['test'] - verifySets[1]['test']))
+	//assert([] == (verifySets[0]['test'] - verifySets[2]['test']))
+	//assert([] == (verifySets[2]['test'] - verifySets[1]['test']))
 }
 
 def getSets(DB db, String bundleId) {
