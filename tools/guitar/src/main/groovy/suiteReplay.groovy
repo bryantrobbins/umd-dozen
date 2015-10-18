@@ -42,7 +42,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
 				if(useShorterMin) {
 					sleep(1000)
 				} else {
-					sleep(5000)
+					sleep(10000)
 				}
 	
 				// sleep more if necessary to let the master catch up
