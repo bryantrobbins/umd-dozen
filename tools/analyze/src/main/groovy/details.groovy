@@ -34,47 +34,44 @@ BasicDBObject resultQuery = new BasicDBObject("resultId", resultId)
 BasicDBObject resultsObject = db.getCollection("results").findOne(resultQuery)
 assert resultId == resultsObject.resultId
 
-// Make sure that given testId was consistently passing
-assert resultsObject.results.passingResults.contains(testId)
-
 // Get associated suiteId
 String suiteId = resultsObject.suiteId
 
-// Get one execution id
-// Since the test passed consistently, we could take it from any bundle
-String bundleId = resultsObject.bundleId.get(0)
-assert null != bundleId
-BasicDBObject execQuery = new BasicDBObject("testId", testId)
-String execId = db.getCollection("bundle_${bundleId}").findOne(execQuery).executionId
-assert null != execId
-println "Using execution id ${execId} from bundle ${bundleId}"
+// For each bundle
+resultsObject.bundleId.each {
+	assert null != it
+	BasicDBObject execQuery = new BasicDBObject("testId", testId)
+
+	// Get execId
+	String execId = db.getCollection("bundle_${it}").findOne(execQuery).executionId
+	assert null != execId
+	println "Using execution id ${execId} from bundle ${it}"
+
+	// Get execId's artifact objects from db (should just be logs)
+	BasicDBObject artifactQuery = new BasicDBObject("ownerId", execId)
+	db.getCollection("artifacts").find(artifactQuery).each {
+		println it
+	}
+}
 
 // Get GUI Structure
-GUIStructure gui = (GUIStructure) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, guiProcessor)
-assert null != gui
-println "Got GUIStructure"
+//GUIStructure gui = (GUIStructure) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, guiProcessor)
+//assert null != gui
+//println "Got GUIStructure"
 
 // Get EFG
-EFG efg = (EFG) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, efgProcessor)
-assert null != efg
-println "Got EFG"
+//EFG efg = (EFG) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT, suiteId, efgProcessor)
+//assert null != efg
+//println "Got EFG"
 
 // Get test case
-TestCase tc = (TestCase) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT, testId, testcaseProcessor)
-assert null != tc
-println "Got TestCase"
+//TestCase tc = (TestCase) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT, testId, testcaseProcessor)
+//assert null != tc
+//println "Got TestCase"
 
 // Get log file
-TextObject log = (TextObject) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT, execId, logProcessor)
-assert null != log
-println "Got TextObject"
+//TextObject log = (TextObject) testDataManager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT, execId, logProcessor)
+//assert null != log
+//println "Got TextObject"
 
-// Debugging the log file mysteries
-BasicDBObject artifactQuery = new BasicDBObject("ownerId", execId)
-db.getCollection("artifacts").find(artifactQuery).each {
-	println it
-}
 //BasicDBObject artifactObject = db.getCollection("artifacts").find(artifactQuery)
-
-
-

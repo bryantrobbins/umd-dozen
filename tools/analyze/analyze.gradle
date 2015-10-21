@@ -59,7 +59,7 @@ task summarizeResults (dependsOn: 'classes', type: JavaExec) {
 		maxHeapSize "4g"
     main = 'summary'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, input_suite_val
+    args master, '37017', db_id_val, input_suite_val, result_id_val
 }
 
 task testDetails (dependsOn: 'classes', type: JavaExec) {
