@@ -31,7 +31,7 @@ String groupId = manager.generateId();
 // Save features from input suite
 for (String testId : manager.getTestIdsInSuite(suiteId)) {
   count++;
-  if ((count % PROGRESS_INTERVAL) == 0) {
+  if ((count % 100) == 0) {
     System.out.println(".");
   }
 
