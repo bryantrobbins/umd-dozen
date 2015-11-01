@@ -73,7 +73,7 @@ task testDetails(dependsOn: 'classes', type: JavaExec) {
 task addAllFeatures(dependsOn: 'classes', type: JavaExec) {
   minHeapSize "1g"
   maxHeapSize "4g"
-  main = 'allfeatures'
+  main = 'allFeatures'
   classpath = sourceSets.main.runtimeClasspath
   args master, '37017', db_id_val, suite_id_val
 }

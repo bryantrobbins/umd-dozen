@@ -16,10 +16,6 @@ HashSet<String> allFeatures = new HashSet<String>();
 int count = 0;
 String groupId = manager.generateId();
 
-HashSet<String> suiteSet = new HashSet<String>();
-//suiteSet.add(inputSuiteId);
-//suiteSet.add(predictedSuiteId);
-
 // Add features to all test cases
 // Save features from input suite
 for (String testId : manager.getTestIdsInSuite(suiteId)) {
