@@ -1,3 +1,7 @@
+import edu.umd.cs.guitar.main.ExperimentManager
+import edu.umd.cs.guitar.main.TestDataManager
+import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor
+
 String mongoHost = args[0]
 String mongoPort = args[1]
 String dbId = args[2]
@@ -31,7 +35,7 @@ for (String testId : manager.getTestIdsInSuite(suiteId)) {
   );
 
   if (fob == null) {
-    artifactId = addFeaturesToTest(manager, testId, fproc, true);
+    artifactId = ExperimentManager.addFeaturesToTest(manager, testId, fproc, true);
     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
   }
   allFeatures.addAll(fob.getFeatures());
@@ -60,5 +64,5 @@ MongoUtils.addItemToCollection(manager.getDb(),
   TestDataManagerCollections.GROUPS,
   bdo);
 
-groupIds.setProperty("groupId", id)
+groupIds.setProperty("groupId", groupId)
 groupIds.store(new FileOutputStream("groups.properties"), null);
