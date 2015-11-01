@@ -1,5 +1,7 @@
 import edu.umd.cs.guitar.main.ExperimentManager
 import edu.umd.cs.guitar.main.TestDataManager
+import edu.umd.cs.guitar.main.TestDataManagerKeys
+import edu.umd.cs.guitar.main.TestDataManagerCollections
 import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor
 
 import com.mongodb.BasicDBList;
