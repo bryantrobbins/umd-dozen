@@ -2,6 +2,13 @@ import edu.umd.cs.guitar.main.ExperimentManager
 import edu.umd.cs.guitar.main.TestDataManager
 import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import edu.umd.cs.guitar.artifacts.ArtifactCategory;
+import edu.umd.cs.guitar.processors.features.FeaturesObject;
+import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor;
+import edu.umd.cs.guitar.util.MongoUtils;
+
 String mongoHost = args[0]
 String mongoPort = args[1]
 String dbId = args[2]
