@@ -1,0 +1,21 @@
+:compileJava UP-TO-DATE
+:compileGroovy UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:summarizeResults
+[guitar05.cs.umd.edu, 37017, amalga_jenkins-generate-random-20, amalga_ArgoUML_efg-random, 562d4e0ce4b0f8782dbeb461]
+Connected to DB amalga_jenkins-generate-random-20
+Working with result ID 562d4e0ce4b0f8782dbeb461
+10000 test cases in suite amalga_ArgoUML_efg-random
+Results from bundles [102, 103]
+Test results summary: 4653 pass, 5347 fail, 0 inconsistent
+First 5 inconsistent results
+null
+null
+null
+null
+null
+
+BUILD SUCCESSFUL
+
+Total time: 10.902 secs

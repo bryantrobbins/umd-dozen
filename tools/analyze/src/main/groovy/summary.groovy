@@ -50,7 +50,7 @@ def checkBundles(DB db, def bundleIds) {
 		verifySets << getSets(db, it)
 	}
 
-	println (verifySets[0]['test'] - verifySets[1]['test'])
+	//println (verifySets[0]['test'] - verifySets[1]['test'])
 	//assert([] == (verifySets[0]['test'] - verifySets[2]['test']))
 	//assert([] == (verifySets[2]['test'] - verifySets[1]['test']))
 }

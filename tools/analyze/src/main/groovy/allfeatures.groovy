@@ -1,0 +1,68 @@
+String mongoHost = args[0]
+String mongoPort = args[1]
+String dbId = args[2]
+String suiteId = args[3]
+int maxN = 4
+println args
+
+// Save some properties of this execution
+Properties groupIds = new Properties();
+
+// Bringing in the feature-posting code
+TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
+FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
+HashSet<String> allFeatures = new HashSet<String>();
+
+int count = 0;
+String groupId = manager.generateId();
+
+HashSet<String> suiteSet = new HashSet<String>();
+//suiteSet.add(inputSuiteId);
+//suiteSet.add(predictedSuiteId);
+
+// Add features to all test cases
+// Save features from input suite
+for (String testId : manager.getTestIdsInSuite(suiteId)) {
+  count++;
+  if ((count % PROGRESS_INTERVAL) == 0) {
+    System.out.println(".");
+  }
+
+  FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
+    ArtifactCategory.TEST_INPUT,
+    testId,
+    fproc
+  );
+
+  if (fob == null) {
+    artifactId = addFeaturesToTest(manager, testId, fproc, true);
+    fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
+  }
+  allFeatures.addAll(fob.getFeatures());
+}
+
+// Build the DBObject
+BasicDBObject bdo = new BasicDBObject();
+
+// Add GroupId
+bdo.put(TestDataManagerKeys.GROUP_ID, groupId);
+
+// Add suite ids
+bdo.put(TestDataManagerKeys.SUITE_ID, suiteId);
+
+// Build and add the global feature list
+BasicDBList dbl = new BasicDBList();
+System.out.println("Features List has size of " + allFeatures.size());
+dbl.addAll(allFeatures);
+bdo.put(TestDataManagerKeys.FEATURES_LIST, dbl);
+
+// Add the value of N
+bdo.put(TestDataManagerKeys.MAX_N, maxN);
+
+// Record the group entry
+MongoUtils.addItemToCollection(manager.getDb(),
+  TestDataManagerCollections.GROUPS,
+  bdo);
+
+groupIds.setProperty("groupId", id)
+groupIds.store(new FileOutputStream("groups.properties"), null);

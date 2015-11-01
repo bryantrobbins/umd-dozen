@@ -1,0 +1,22 @@
+:compileJava UP-TO-DATE
+:compileGroovy UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:summarizeResults
+[guitar05.cs.umd.edu, 37017, amalga_jenkins-generate-random-19, amalga_JabRef_efg-random, 562bf9b2e4b0664b73eedb28]
+Connected to DB amalga_jenkins-generate-random-19
+Working with result ID 562bf9b2e4b0664b73eedb28
+10000 test cases in suite amalga_JabRef_efg-random
+Results from bundles [98, 99]
+[]
+Test results summary: 6307 pass, 2984 fail, 709 inconsistent
+First 5 inconsistent results
+t_e156642600_e3404558410_e3221081320
+t_e1972783864_e156642600_e1644852604
+t_e2063383210_e2387678402_e1644852604
+t_e277273440_e3712749698_e431369474
+t_e1564745844_e2027688136_e469553660
+
+BUILD SUCCESSFUL
+
+Total time: 7.446 secs
