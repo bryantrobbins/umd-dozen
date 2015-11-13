@@ -29,24 +29,20 @@ HashSet<String> allFeatures = new HashSet<String>();
 int count = 0;
 String groupId = manager.generateId();
 
-// Add features to all test cases
-// Save features from input suite
+// For each test in the suite
 for (String testId : manager.getTestIdsInSuite(suiteId)) {
   count++;
   if ((count % 100) == 0) {
     System.out.println(".");
   }
 
-  FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
-    ArtifactCategory.TEST_INPUT,
-    testId,
-    fproc
-  );
+  // Create features object and add to DB as test output artifact
+  artifactId = addFeaturesToTest(manager, testId, fproc, false);
 
-  if (fob == null) {
-    artifactId = ExperimentManager.addFeaturesToTest(manager, testId, fproc, true);
-    fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
-  }
+  // Fetch new features object
+  fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
+
+  // Add features to allFeatures set
   allFeatures.addAll(fob.getFeatures());
 }
 
@@ -75,3 +71,30 @@ MongoUtils.addItemToCollection(manager.getDb(),
 
 groupIds.setProperty("groupId", groupId)
 groupIds.store(new FileOutputStream("groups.properties"), null);
+
+private static String addFeaturesToTest(
+  final TestDataManager manager,
+  final String testId,
+  final FeaturesProcessor featuresProcessor,
+  final boolean trim) {
+
+  // Convert trim arg to String
+  String trimString = "false";
+  if (trim) {
+    trimString = "true";
+  }
+
+  // Build options
+  Map<String, String> options = new HashMap<String, String>();
+  options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
+  options.put(FeaturesProcessor.TRIM_OPTION, trimString);
+  options.put(FeaturesProcessor.REMOVE_OPTION, "true");
+
+  // Save features object
+  return manager.saveArtifact(
+    ArtifactCategory.TEST_INPUT,
+    featuresProcessor,
+    options,
+    testId
+  );
+}
