@@ -37,7 +37,7 @@ for (String testId : manager.getTestIdsInSuite(suiteId)) {
   }
 
   // Create features object and add to DB as test output artifact
-  artifactId = addFeaturesToTest(manager, testId, fproc, false);
+  artifactId = addFeaturesToTest(manager, testId, suiteId, fproc, false);
 
   // Fetch new features object
   fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
@@ -75,6 +75,7 @@ groupIds.store(new FileOutputStream("groups.properties"), null);
 private static String addFeaturesToTest(
   final TestDataManager manager,
   final String testId,
+  final String suiteId,
   final FeaturesProcessor featuresProcessor,
   final boolean trim) {
 
@@ -87,6 +88,7 @@ private static String addFeaturesToTest(
   // Build options
   Map<String, String> options = new HashMap<String, String>();
   options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
+  options.put(FeaturesProcessor.SUITE_ID_OPTION, suiteId);
   options.put(FeaturesProcessor.TRIM_OPTION, trimString);
   options.put(FeaturesProcessor.REMOVE_OPTION, "true");
 
