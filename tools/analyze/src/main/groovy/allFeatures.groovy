@@ -15,7 +15,7 @@ String mongoHost = args[0]
 String mongoPort = args[1]
 String dbId = args[2]
 String suiteId = args[3]
-int maxN = 4
+int maxN = 2
 println args
 
 // Save some properties of this execution
