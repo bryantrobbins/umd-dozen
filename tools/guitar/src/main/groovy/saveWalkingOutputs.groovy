@@ -12,7 +12,8 @@ println args
 host=args[0]
 port=args[1]
 dbId=args[2]
-testId=args[3]
+suiteId=args[3]
+testId=args[4]
 
 // Create a TestDataManager
 def manager = new TestDataManager(host, port, dbId)
@@ -22,6 +23,10 @@ ArtifactCategory cat = ArtifactCategory.TEST_INPUT
 LogProcessor lp = new LogProcessor()
 MapProcessor mp = new MapProcessor(manager.getDb())
 TestcaseProcessor tp = new TestcaseProcessor()
+
+// Configure test and add to suite
+manager.createNewTest(testId)
+manager.addTestCaseToSuite(testId, suiteId)
 
 // Save Log
 println "Saving log ${findLogFile()}"
