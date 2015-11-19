@@ -205,5 +205,5 @@ task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
 task saveWalkingOutputs (dependsOn: 'classes', type: JavaExec) {
     main = 'saveWalkingOutputs'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, test_id_val
+    args master, '37017', db_id_val, suite_id_val, test_id_val
 }
