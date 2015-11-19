@@ -19,6 +19,7 @@ def aut_arguments_val = hasProperty('aut_arguments') ? aut_arguments : ''
 def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
 def aut_classpath_val = hasProperty('aut_classpath') ? aut_classpath : ''
 def testcase_length_val = hasProperty('testcase_length') ? testcase_length : ''
+def suite_size_val = hasProperty('suite_size') ? suite_size : ''
 
 // Additional converter args
 def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
@@ -184,12 +185,6 @@ task replaySuite (dependsOn: 'classes', type: JavaExec) {
     args aut_name_val, db_id_val, suite_id_val, bundle_id_val
 }
 
-task walking (dependsOn: 'classes', type: JavaExec) {
-    main = 'walking'
-    classpath = sourceSets.main.runtimeClasspath
-    args aut_name_val, db_id_val, test_length_val
-}
-
 task tripleReplay (dependsOn: 'classes', type: JavaExec) {
     main = 'tripleReplay'
     classpath = sourceSets.main.runtimeClasspath
@@ -200,6 +195,12 @@ task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
     main = 'saveTCOutputs'
     classpath = sourceSets.main.runtimeClasspath
     args master, '37017', db_id_val, exec_id_val, coverage_dir_val
+}
+
+task walking (dependsOn: 'classes', type: JavaExec) {
+    main = 'walking'
+    classpath = sourceSets.main.runtimeClasspath
+    args aut_name_val, db_id_val, test_length_val, suite_size_val
 }
 
 task saveWalkingOutputs (dependsOn: 'classes', type: JavaExec) {

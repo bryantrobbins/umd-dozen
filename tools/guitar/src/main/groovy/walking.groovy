@@ -15,14 +15,14 @@ def manager = new TestDataManager(master, "37017", args[1])
 // REST client to talk to Jenkins for build count
 def client = new RESTClient("http://${master}:8888")
  
-def tests = manager.getTestIdsInSuite(args[2])
-println "Size is ${tests.size()}"
+int ntests=Integer.parseInt(args[3])
+println "Ripping ${ntests} tests"
 
 int count = 0
 boolean useShorterMin = false
 int BUILD_COUNT_THRESHOLD = 5
 
-for(String id : manager.getTestIdsInSuite(args[2])){
+while (count < ntests) {
 				count++
 
         // build Map of params
