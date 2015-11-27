@@ -127,6 +127,16 @@ task replay(type: JavaExec) {
 	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tde", exec_id_val, "-tdb", bundle_id_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", master, "-tdp", "37017", "-a", aut_arguments_val, "-cc", clean_coverage_file_val, "-cd", coverage_dir_val
 }
 
+task replayNoCoverage(type: JavaExec) {
+	classpath configurations.replayer
+	main = 'edu.umd.cs.guitar.replayer.JFCReplayerMain'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	systemProperty "user.home", tmp_home_val
+	systemProperty "log4j.configuration", "log/guitar-clean.glc"
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tde", exec_id_val, "-tdb", bundle_id_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", master, "-tdp", "37017", "-a", aut_arguments_val
+}
+
 task convert(type: JavaExec) {
 	classpath configurations.converter
 	main = 'edu.umd.cs.guitar.graph.GUIStructure2GraphConverter'

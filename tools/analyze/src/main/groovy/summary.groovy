@@ -27,7 +27,11 @@ def getResultsParentObj(db, resultId) {
 }
 
 // Sanity check suite collection
-def testCount = db.getCollection("suite_${suiteId}").count()
+def suiteName = "suite_${suiteId}"
+println suiteName
+def coll = db.getCollection(suiteName)
+println coll
+def testCount = coll.find().size()
 println "${testCount} test cases in suite ${suiteId}"
 
 // Sanity check bundles
